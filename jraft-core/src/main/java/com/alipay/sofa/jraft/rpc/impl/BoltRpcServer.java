@@ -93,6 +93,7 @@ public class BoltRpcServer implements RpcServer {
 
     @Override
     public void registerProcessor(final RpcProcessor processor) {
+        // 这是真正去注册到bolt rpc框架的逻辑
         this.rpcServer.registerUserProcessor(new AsyncUserProcessor<Object>() {
 
             @SuppressWarnings("unchecked")

@@ -46,6 +46,8 @@ import org.slf4j.LoggerFactory;
  *
  * Forked from <a href="https://github.com/netty/netty">Netty</a>.
  */
+
+// https://www.jianshu.com/p/1eb1b7c67d63
 public class HashedWheelTimer implements Timer {
 
     private static final Logger                                      LOG                    = LoggerFactory

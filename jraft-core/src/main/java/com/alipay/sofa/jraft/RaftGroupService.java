@@ -124,10 +124,12 @@ public class RaftGroupService {
             throw new IllegalArgumentException("Blank group id:" + this.groupId);
         }
         //Adds RPC server to Server.
+        // 将server地址信息添加至NodeManager
         NodeManager.getInstance().addAddress(this.serverId.getEndpoint());
 
+        // 创建raft节点
         this.node = RaftServiceFactory.createAndInitRaftNode(this.groupId, this.serverId, this.nodeOptions);
-        if (startRpcServer) {
+        if (startRpcServer) { //启动rpcServer
             this.rpcServer.init(null);
         } else {
             LOG.warn("RPC server is not started in RaftGroupService.");

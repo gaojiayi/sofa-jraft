@@ -18,6 +18,7 @@ package com.alipay.sofa.jraft.util.timer;
 
 import java.util.Collections;
 import java.util.Set;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -98,6 +99,24 @@ public class DefaultRaftTimerFactory implements RaftTimerFactory {
     @Override
     public Timer createTimer(final String name) {
         return new HashedWheelTimer(new NamedThreadFactory(name, true), 1, TimeUnit.MILLISECONDS, 2048);
+    }
+
+    /**
+     * 每5秒执行一次
+     * @param args
+     */
+    public static void main(String[] args) {
+        final Timer timer = new HashedWheelTimer(Executors.defaultThreadFactory(),5,TimeUnit.SECONDS,2);
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run(Timeout timeout) throws Exception {
+                System.out.println("task=========>>>>>>>>");
+                timer.newTimeout(this,5,TimeUnit.SECONDS);
+            }
+        };
+
+        timer.newTimeout(task,5,TimeUnit.SECONDS);
+
     }
 
     @Override

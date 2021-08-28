@@ -53,6 +53,7 @@ public class CounterServer {
         // 这里让 raft RPC 和业务 RPC 使用同一个 RPC server, 通常也可以分开
         final RpcServer rpcServer = RaftRpcServerFactory.createRaftRpcServer(serverId.getEndpoint());
         // 注册业务处理器
+        // 具体的请求使用哪个processor  是根据interest()来匹配的
         CounterService counterService = new CounterServiceImpl(this);
         rpcServer.registerProcessor(new GetValueRequestProcessor(counterService));
         rpcServer.registerProcessor(new IncrementAndGetRequestProcessor(counterService));
@@ -121,12 +122,13 @@ public class CounterServer {
         nodeOptions.setDisableCli(false);
         // 每隔30秒做一次 snapshot
         nodeOptions.setSnapshotIntervalSecs(30);
-        // 解析参数
+        // 解析参数  当前server信息
         final PeerId serverId = new PeerId();
         if (!serverId.parse(serverIdStr)) {
             throw new IllegalArgumentException("Fail to parse serverId:" + serverIdStr);
         }
         final Configuration initConf = new Configuration();
+        //  解析多个peerid 和 learner
         if (!initConf.parse(initConfStr)) {
             throw new IllegalArgumentException("Fail to parse initConf:" + initConfStr);
         }

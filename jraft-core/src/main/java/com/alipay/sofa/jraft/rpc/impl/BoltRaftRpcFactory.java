@@ -68,7 +68,9 @@ public class BoltRaftRpcFactory implements RaftRpcFactory {
     public RpcServer createRpcServer(final Endpoint endpoint, final ConfigHelper<RpcServer> helper) {
         final int port = Requires.requireNonNull(endpoint, "endpoint").getPort();
         Requires.requireTrue(port > 0 && port < 0xFFFF, "port out of range:" + port);
+        // 使用sofa-bolt的RpcServer
         final com.alipay.remoting.rpc.RpcServer boltImpl = new com.alipay.remoting.rpc.RpcServer(port, true, false);
+        //  jraft做一层简单的封装
         final RpcServer rpcServer = new BoltRpcServer(boltImpl);
         if (helper != null) {
             helper.config(rpcServer);
