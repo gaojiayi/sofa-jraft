@@ -68,8 +68,10 @@ public class CounterStateMachine extends StateMachineAdapter {
         return this.value.get();
     }
 
+    //  raft 日志  变成业务逻辑结果
     @Override
     public void onApply(final Iterator iter) {
+        //获取processor中封装的数据
         while (iter.hasNext()) {
             long current = 0;
             CounterOperation counterOperation = null;
@@ -77,6 +79,7 @@ public class CounterStateMachine extends StateMachineAdapter {
             CounterClosure closure = null;
             if (iter.done() != null) {
                 // This task is applied by this node, get value from closure to avoid additional parsing.
+                // 定义在IncrementAndGetRequestProcessor
                 closure = (CounterClosure) iter.done();
                 counterOperation = closure.getCounterOperation();
             } else {
